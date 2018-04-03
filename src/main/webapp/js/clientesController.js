@@ -1,20 +1,25 @@
 /*jslint browser: true*/
 /*global $, jQuery*/
 
-$(function () {
+$( () => {
     //Configure events on page load
-    clienteCtrl.init(viewModel);
+    let ctrl=new ClienteCtrl();
+    ctrl.init(viewModel);
 });
 
-var viewModel = {
+let viewModel = {
         clientes: [],
         cliente: {},
         errMsgs: []
     };
 
 //Clientes Controller
-var clienteCtrl = {
-    config: {
+
+class ClienteCtrl {
+
+    constructor () {
+        this.model={};
+        this.config= {
         wrapper: '#tbClientes',       //place for clientes list <tbody> tag
         dialog:  '#edCliente',
         frmEdit: '#frmCliente',
@@ -23,65 +28,62 @@ var clienteCtrl = {
         btCancel:'#btCancela',
         errMsgs: '#errMsgs',          //place for Server-side errors
         srvUrl:  'webservice/clientes'
-    },
-    model: {},
-    init: function (model) {
+    };
+    };
+    init (model) {
         this.model = model;  //save view-model reference in controller
         
         //Attach view event-handlers
         
-        var self = this; //closure var for accesing clienteCtrl object on event handlers
 
-        $(this.config.frmEdit).submit(function (event) {
+        $(this.config.frmEdit).submit( (event)=> {
             event.preventDefault(); //Avoid default form submit
-            self.frmSubmit();
+            this.frmSubmit();
         });
-        $(this.config.btAdd).on('click', function () {            
-            self.addCliente();
+        $(this.config.btAdd).on('click', ()=> {            
+            this.addCliente();
         });
-        $(this.config.btDel).on('click', function () {            
-            self.deleteCliente(self.model.cliente.id);
+        $(this.config.btDel).on('click', ()=> {            
+            this.deleteCliente(this.model.cliente.id);
         });
-        $(this.config.btCancel).on('click', function () {            
-            self.frmEditHide();
+        $(this.config.btCancel).on('click', ()=> {            
+            this.frmEditHide();
         });
-        $(this.config.wrapper).on('click', function (event) {
+        $(this.config.wrapper).on('click', (event)=> {
             //Identify row selected on table click (bubbling event)
-            $selectedRow=$(event.target).parent();
+            let $selectedRow=$(event.target).parent();
             if ($selectedRow.is('tr'))
                 //id for selected cliente is in user-defined attribute
-                self.editCliente($selectedRow.attr('data-cliente-id'));
+                this.editCliente($selectedRow.attr('data-cliente-id'));
         });
         
         //Start Showing Clientes
         this.loadClientes();
-    },
+    }
     //
-    addCliente: function () {        
+    addCliente () {        
         this.model.errMsgs=[];
         this.model.cliente={id:0,socio:false};
         this.frmEditShow();
-    },
-    editCliente: function (id) {
+    }
+    editCliente (id) {
         //Show selected cliente in edit form
-        var self = this;
         this.model.errMsgs=[];
         //Get cliente from server and update local model
         $.getJSON(this.config.srvUrl+"/"+id)
-                .done(function (cliente) {
-                    self.model.cliente=cliente;
-                    self.frmEditShow();
+                .done((cliente)=>{
+                    this.model.cliente=cliente;
+                    this.frmEditShow();
                 })
-                .fail(function (jqxhr) {
+                .fail((jqxhr)=> {
                     console.log(jqxhr);
-                    self.model.errMsgs=jqxhr.responseJSON;
-                    self.showServerErrors();
+                    this.model.errMsgs=jqxhr.responseJSON;
+                    this.showServerErrors();
                 });
-    },
-    frmSubmit: function () {
+    }
+    frmSubmit () {
         //Create or Update cliente on server
-        var cliente = this.model.cliente,
-            self;
+        let cliente = this.model.cliente;
         
         cliente={};
    
@@ -95,9 +97,8 @@ var clienteCtrl = {
         
         //Form Client-side validation
         if (this.validateCliente(cliente)) {
-            self = this;
-            var RESTMethod=parseInt(cliente.id)>0?'PUT':'POST'; //Edit or Create
-            var RESTUrl=this.config.srvUrl;
+            let RESTMethod=parseInt(cliente.id)>0?'PUT':'POST'; //Edit or Create
+            let RESTUrl=this.config.srvUrl;
             if (RESTMethod==='PUT') 
                 RESTUrl+="/"+cliente.id;
             //$.post(this.config.srvUrl)  // only for direct form post: application/x-www-form-urlencoded
@@ -108,20 +109,19 @@ var clienteCtrl = {
                 contentType: 'application/JSON',
                 data: JSON.stringify(cliente)               
                 })
-                .done(function (json) {
+                .done((json)=> {
                     console.log(json);
-                    self.frmEditHide();
-                    self.loadClientes();
+                    this.frmEditHide();
+                    this.loadClientes();
                 })
-                .fail(function (jqxhr) {
+                .fail((jqxhr)=> {
                     console.log(jqxhr);
-                    self.model.errMsgs=jqxhr.responseJSON;
-                    self.showServerErrors();
+                    this.model.errMsgs=jqxhr.responseJSON;
+                    this.showServerErrors();
                 });
         }
-    },
-    deleteCliente: function (id) {        
-        var self = this;
+    }
+    deleteCliente (id) {        
         id = id || 0;  //prevent undefined
         this.model.errMsgs=[];
             $.ajax({
@@ -129,20 +129,20 @@ var clienteCtrl = {
                 type: 'DELETE',
                 dataType: 'json'                //expected data type
                 })
-                .done(function () {
-                    self.frmEditHide();
-                    self.loadClientes();            
+                .done(()=> {
+                    this.frmEditHide();
+                    this.loadClientes();            
                 })
-                .fail(function (jqxhr) {
+                .fail((jqxhr)=> {
                     console.log(jqxhr);
-                    self.model.errMsgs=jqxhr.responseJSON;
-                    self.showServerErrors();
+                    this.model.errMsgs=jqxhr.responseJSON;
+                    this.showServerErrors();
                 });
-    },
-    validateCliente: function (cliente) {
+    }
+    validateCliente (cliente) {
         //Form Client-side validation
         //Shows validation errors next to form fields
-        var result = true;
+        let result = true;
         if (cliente.nombre.length < 4 ) {
             $('#errNombre').show();
             result = false;
@@ -152,58 +152,57 @@ var clienteCtrl = {
         //Further client-side input validations... 
         //(ommited for checking server-side validation errors)
         return result;
-    },
+    }
     
-    frmEditShow: function () {
+    frmEditShow () {
         //Shows Edit form
         this.frmEditUpdate();
         this.showServerErrors();
         $(this.config.dialog).modal('show');
-    },
-    frmEditHide: function () {
+    }
+    frmEditHide () {
         //Hides Edit form
         $(this.config.dialog).modal('hide');
         //clean previous errors
         $(this.config.errMsgs).empty();
         $('#errNombre').hide();
         $('#errDni').hide();
-    },    
-    frmEditUpdate: function () {
+    }    
+    frmEditUpdate () {
         //Fill form controls with this.model.cliente data
-        var c=this.model.cliente;
+        let c=this.model.cliente;
         $('#id').text( c.id );
         $('[name=nombre]').val(c.nombre);
         $('[name=dni]').val(c.dni);
         $('[name=socio]').prop('checked',c.socio);
-    },
-    showServerErrors: function () {
+    }
+    showServerErrors () {
         //Show BeanValidation errors from server-side
-        var errorRows = "";
-        this.model.errMsgs.forEach(function (m) {
+        let errorRows = "";
+        this.model.errMsgs.forEach( (m)=> {
             errorRows += "<li class='text-danger'>" + m.message + "</li>";
         });
         $(this.config.errMsgs).html(errorRows);
 
         this.model.errMsgs=[]; //Clean server errors
-    },
-    loadClientes: function () {
-        var self = this;
+    }
+    loadClientes () {
         //Get clientes from server and update local model
         $.getJSON(this.config.srvUrl)
-                .done(function (clientes) {
-                    self.model.clientes = clientes;
-                    self.showClientes(); //force view update
+                .done((clientes)=> {
+                    this.model.clientes = clientes;
+                    this.showClientes(); //force view update
                 })
-                .fail(function (jqxhr) {
+                .fail((jqxhr)=> {
                     console.log(jqxhr);
-                    self.model.errMsgs=jqxhr.responseJSON;
-                    self.showServerErrors();
+                    this.model.errMsgs=jqxhr.responseJSON;
+                    this.showServerErrors();
                 });
-    },
-    showClientes: function () {
+    }
+    showClientes () {
         //Fill table with clientes information
-        var clientesRows = "";
-        this.model.clientes.forEach(function (c) {
+        let clientesRows = "";
+        this.model.clientes.forEach( (c)=> {
             //Place cliente id in user-defined row attribute for easy access 
             //(see table click event)
             clientesRows += "<tr data-cliente-id='"+c.id+"'>";

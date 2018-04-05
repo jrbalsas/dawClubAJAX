@@ -2,40 +2,42 @@
 /*global $, jQuery*/
 
 $( () => {
-    //Configure events on page load
-    let ctrl=new ClienteCtrl();
-    ctrl.init(viewModel);
-});
-
-let viewModel = {
+    //Create DAO and ModelView
+    let clientesDAO= new ClientesDAOJquery();
+    let viewModel = { 
         clientes: [],
         cliente: {},
         errMsgs: []
     };
+    //Create controller + Dependency Injection
+    let ctrl=new ClienteCtrl(viewModel, clientesDAO);
+
+    //Configure events on page load   
+    ctrl.init(viewModel);
+});
 
 //Clientes Controller
 
 class ClienteCtrl {
 
-    constructor () {
-        this.model={};
+    constructor (vm,clientesDAO) {
+        this.clientesDAO=clientesDAO; // DAO injection
+        this.model=vm; //save view-model reference in controller
         this.config= {
-        wrapper: '#tbClientes',       //place for clientes list <tbody> tag
-        dialog:  '#edCliente',
-        frmEdit: '#frmCliente',
-        btAdd:   '#btCrea',
-        btDel:   '#btBorra',
-        btCancel:'#btCancela',
-        errMsgs: '#errMsgs',          //place for Server-side errors
-        srvUrl:  'webservice/clientes'
+            wrapper: '#tbClientes',       //place for clientes list <tbody> tag
+            dialog:  '#edCliente',
+            frmEdit: '#frmCliente',
+            btAdd:   '#btCrea',
+            btDel:   '#btBorra',
+            btCancel:'#btCancela',
+            errMsgs: '#errMsgs',          //place for Server-side errors
+            srvUrl:  'webservice/clientes'
+        };
     };
-    };
-    init (model) {
-        this.model = model;  //save view-model reference in controller
+    init () {
         
         //Attach view event-handlers
         
-
         $(this.config.frmEdit).submit( (event)=> {
             event.preventDefault(); //Avoid default form submit
             this.frmSubmit();
@@ -70,7 +72,7 @@ class ClienteCtrl {
         //Show selected cliente in edit form
         this.model.errMsgs=[];
         //Get cliente from server and update local model
-        $.getJSON(this.config.srvUrl+"/"+id)
+        this.clientesDAO.busca(id)
                 .done((cliente)=>{
                     this.model.cliente=cliente;
                     this.frmEditShow();
@@ -97,38 +99,28 @@ class ClienteCtrl {
         
         //Form Client-side validation
         if (this.validateCliente(cliente)) {
-            let RESTMethod=parseInt(cliente.id)>0?'PUT':'POST'; //Edit or Create
-            let RESTUrl=this.config.srvUrl;
-            if (RESTMethod==='PUT') 
-                RESTUrl+="/"+cliente.id;
-            //$.post(this.config.srvUrl)  // only for direct form post: application/x-www-form-urlencoded
-            $.ajax({
-                url: RESTUrl,                
-                type: RESTMethod,
-                dataType: 'json',                //expected data type
-                contentType: 'application/JSON',
-                data: JSON.stringify(cliente)               
-                })
-                .done((json)=> {
-                    console.log(json);
-                    this.frmEditHide();
-                    this.loadClientes();
-                })
-                .fail((jqxhr)=> {
-                    console.log(jqxhr);
-                    this.model.errMsgs=jqxhr.responseJSON;
-                    this.showServerErrors();
-                });
-        }
+            
+            
+            let operacion=null;
+            if (cliente.id>0) {
+                operacion= this.clientesDAO.guarda(cliente);
+            } else {
+                operacion=this.clientesDAO.crea(cliente);
+            }
+            operacion.done((json)=> {
+                        console.log(json);
+                        this.frmEditHide();
+                        this.loadClientes();
+                    })
+                    .fail((jqxhr)=> {
+                        console.log(jqxhr);
+                        this.model.errMsgs=jqxhr.responseJSON;
+                        this.showServerErrors();
+                    });
+            }                    
     }
-    deleteCliente (id) {        
-        id = id || 0;  //prevent undefined
-        this.model.errMsgs=[];
-            $.ajax({
-                url: this.config.srvUrl+"/"+id,                
-                type: 'DELETE',
-                dataType: 'json'                //expected data type
-                })
+    deleteCliente (id=0) {        
+        this.clientesDAO.borra(id)
                 .done(()=> {
                     this.frmEditHide();
                     this.loadClientes();            
@@ -152,8 +144,7 @@ class ClienteCtrl {
         //Further client-side input validations... 
         //(ommited for checking server-side validation errors)
         return result;
-    }
-    
+    }   
     frmEditShow () {
         //Shows Edit form
         this.frmEditUpdate();
@@ -188,7 +179,7 @@ class ClienteCtrl {
     }
     loadClientes () {
         //Get clientes from server and update local model
-        $.getJSON(this.config.srvUrl)
+        this.clientesDAO.buscaTodos()
                 .done((clientes)=> {
                     this.model.clientes = clientes;
                     this.showClientes(); //force view update

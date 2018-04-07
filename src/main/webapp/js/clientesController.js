@@ -1,26 +1,29 @@
 /*jslint browser: true*/
 /*global $, jQuery*/
 
-$( () => {
-    //Create DAO and ModelView
-    let clientesDAO= new ClientesDAOJquery();
+$( () => { //Bootstrapting MVC
+ 
+    //Select DAO implementation
+    //let clientesDAO= new ClientesDAOJquery();
+    let clientesDAO= new ClientesDAOfetch();
+
     let viewModel = { 
-        clientes: [],
-        cliente: {},
-        errMsgs: []
+        clientes: [],   //Client list
+        cliente: {},    //Current client
+        errMsgs: []     //JSON error from JAX-RS webservice
     };
     //Create controller + Dependency Injection
     let ctrl=new ClienteCtrl(viewModel, clientesDAO);
 
-    //Configure events on page load   
-    ctrl.init(viewModel);
+    //Attach view event handlers
+    ctrl.init();
 });
 
 //Clientes Controller
 
 class ClienteCtrl {
 
-    constructor (vm,clientesDAO) {
+    constructor ( vm , clientesDAO) {
         this.clientesDAO=clientesDAO; // DAO injection
         this.model=vm; //save view-model reference in controller
         this.config= {
@@ -33,12 +36,12 @@ class ClienteCtrl {
             errMsgs: '#errMsgs',          //place for Server-side errors
             srvUrl:  'webservice/clientes'
         };
-    };
-    init () {
-        
+    }
+    
+    init () {        
         //Attach view event-handlers
         
-        $(this.config.frmEdit).submit( (event)=> {
+        $(this.config.frmEdit).submit( event=> {
             event.preventDefault(); //Avoid default form submit
             this.frmSubmit();
         });
@@ -51,7 +54,7 @@ class ClienteCtrl {
         $(this.config.btCancel).on('click', ()=> {            
             this.frmEditHide();
         });
-        $(this.config.wrapper).on('click', (event)=> {
+        $(this.config.wrapper).on('click', event=> {
             //Identify row selected on table click (bubbling event)
             let $selectedRow=$(event.target).parent();
             if ($selectedRow.is('tr'))
@@ -73,13 +76,13 @@ class ClienteCtrl {
         this.model.errMsgs=[];
         //Get cliente from server and update local model
         this.clientesDAO.busca(id)
-                .done((cliente)=>{
+                .then(cliente=>{
                     this.model.cliente=cliente;
                     this.frmEditShow();
                 })
-                .fail((jqxhr)=> {
-                    console.log(jqxhr);
-                    this.model.errMsgs=jqxhr.responseJSON;
+                .catch( errores => {
+                    console.log(errores);
+                    this.model.errMsgs=errores;
                     this.showServerErrors();
                 });
     }
@@ -107,27 +110,28 @@ class ClienteCtrl {
             } else {
                 operacion=this.clientesDAO.crea(cliente);
             }
-            operacion.done((json)=> {
+            operacion
+                    .then( json => {
                         console.log(json);
                         this.frmEditHide();
                         this.loadClientes();
                     })
-                    .fail((jqxhr)=> {
-                        console.log(jqxhr);
-                        this.model.errMsgs=jqxhr.responseJSON;
+                    .catch( errores => {
+                        console.log(errores);
+                        this.model.errMsgs=errores;
                         this.showServerErrors();
                     });
             }                    
     }
     deleteCliente (id=0) {        
         this.clientesDAO.borra(id)
-                .done(()=> {
+                .then(() => {
                     this.frmEditHide();
                     this.loadClientes();            
                 })
-                .fail((jqxhr)=> {
-                    console.log(jqxhr);
-                    this.model.errMsgs=jqxhr.responseJSON;
+                .catch(errores  => {
+                    console.log(errores);
+                    this.model.errMsgs=errores;
                     this.showServerErrors();
                 });
     }
@@ -169,8 +173,9 @@ class ClienteCtrl {
     }
     showServerErrors () {
         //Show BeanValidation errors from server-side
+        console.log(this.model.errMsgs);
         let errorRows = "";
-        this.model.errMsgs.forEach( (m)=> {
+        this.model.errMsgs.forEach( (m) => {
             errorRows += "<li class='text-danger'>" + m.message + "</li>";
         });
         $(this.config.errMsgs).html(errorRows);
@@ -180,20 +185,20 @@ class ClienteCtrl {
     loadClientes () {
         //Get clientes from server and update local model
         this.clientesDAO.buscaTodos()
-                .done((clientes)=> {
+                .then( clientes => {
                     this.model.clientes = clientes;
                     this.showClientes(); //force view update
                 })
-                .fail((jqxhr)=> {
-                    console.log(jqxhr);
-                    this.model.errMsgs=jqxhr.responseJSON;
+                .catch( errores => {
+                    console.log(errores);
+                    this.model.errMsgs=errores;
                     this.showServerErrors();
                 });
     }
     showClientes () {
         //Fill table with clientes information
         let clientesRows = "";
-        this.model.clientes.forEach( (c)=> {
+        this.model.clientes.forEach( c => {
             //Place cliente id in user-defined row attribute for easy access 
             //(see table click event)
             clientesRows += "<tr data-cliente-id='"+c.id+"'>";

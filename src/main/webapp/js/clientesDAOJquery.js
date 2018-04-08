@@ -40,11 +40,14 @@ class ClientesDAOJquery {
         }).catch ( this.notificarError );
     }
 
-    /** Create an exception object with error mesage details 
-     * @throws an object exception with message details if network error or http error status*/
+    /** Reject promise  with error mesage details 
+    */
     notificarError(jqxhr) {
-            //TODO  detect&notify network errors
-            throw  jqxhr.responseJSON;    
+        //TODO  detect&notify network errors
+        
+        //send validation errors
+        //Rejects promise, forces catch response in DAO
+        return Promise.reject(jqxhr.responseJSON);
     }
 
     

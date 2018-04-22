@@ -58,7 +58,7 @@ class ClientesDAOfetch {
         //Resolves or reject promise with response data
         if (!this.respuestaValida) {
             //send validation errors
-            //Rejects promose, forces catch response in DAO
+            //Rejects promise, forces catch response in DAO
             return Promise.reject(json);
         }
         return json;        

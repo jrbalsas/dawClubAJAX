@@ -28,7 +28,7 @@ class ClientesDAOfetch {
                 .then (response => this.devolverRespuesta(response) );
     }
     guarda(cliente) {
-        return fetch(this.srvUrl, {
+        return fetch(`${this.srvUrl}/${cliente.id}`, {
                     method: 'PUT',
                     body: JSON.stringify(cliente),
                     headers: {

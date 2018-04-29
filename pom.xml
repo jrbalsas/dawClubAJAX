@@ -32,32 +32,37 @@
         <dependency>
             <groupId>org.jboss.weld.servlet</groupId>
             <artifactId>weld-servlet</artifactId>
-            <version>2.4.6.Final</version>
+            <version>2.4.7.Final</version>
             <scope>runtime</scope>
         </dependency>
         <!-- JAX-RS implementation for Tomcat -->
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet</artifactId>
-            <version>2.25</version>
+            <version>2.27</version>
         </dependency>
         <!-- Enable CDI in JAX-RS endpoints for Tomcat -->
         <dependency>
             <groupId>org.glassfish.jersey.ext.cdi</groupId>
             <artifactId>jersey-cdi1x</artifactId>
-            <version>2.25</version>
+            <version>2.27</version>
+        </dependency>        
+        <dependency>
+            <groupId>org.glassfish.jersey.inject</groupId>
+            <artifactId>jersey-hk2</artifactId>
+            <version>2.27</version>
         </dependency>
         <!-- Jersey Bean Validation -->
         <dependency>
             <groupId>org.glassfish.jersey.ext</groupId>
             <artifactId>jersey-bean-validation</artifactId>
-            <version>2.25</version>
+            <version>2.27</version>
         </dependency>        
         <!-- JSON-B JSR367 implementation for Tomcat -->        
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jackson</artifactId>
-            <version>2.25</version>
+            <version>2.27</version>
         </dependency>   
          
         <dependency>

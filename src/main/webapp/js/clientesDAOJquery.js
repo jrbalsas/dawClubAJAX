@@ -1,3 +1,4 @@
+//Sample AJAX DAO implementation with jQuery ajax calls
 class ClientesDAOJquery {
 
     constructor() {
@@ -17,7 +18,7 @@ class ClientesDAOJquery {
             url: this.srvUrl,
             type: 'POST',
             dataType: 'json', //expected data type
-            contentType: 'application/JSON',
+            contentType: 'application/json',
             data: JSON.stringify(cliente)
         }).catch ( this.notificarError );
     }
@@ -27,7 +28,7 @@ class ClientesDAOJquery {
             url: this.srvUrl + '/' + cliente.id,
             type: 'PUT',
             dataType: 'json',
-            contentType: 'application/JSON',
+            contentType: 'application/json',
             data: JSON.stringify(cliente)
         }).catch ( this.notificarError );
     }

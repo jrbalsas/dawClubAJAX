@@ -176,7 +176,7 @@ class ClienteCtrl {
         console.log(this.model.errMsgs);
         let errorRows = "";
         this.model.errMsgs.forEach( (m) => {
-            errorRows += "<li class='text-danger'>" + m.message + "</li>";
+            errorRows += "<li class='text-danger'>" + m.error + "</li>";
         });
         $(this.config.errMsgs).html(errorRows);
 

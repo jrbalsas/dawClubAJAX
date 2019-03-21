@@ -29,7 +29,7 @@ import javax.ws.rs.core.Response;
  * @author jrbalsas
  */
 @Path("clientes")
-@Produces(MediaType.APPLICATION_JSON+";charset=utf-8")
+@Produces(MediaType.APPLICATION_JSON)
 
 @RequestScoped 
 public class ClientesJSONService {

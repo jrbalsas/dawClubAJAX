@@ -1,3 +1,4 @@
+//Sample AJAX DAO implementation with fetch ajax calls
 class ClientesDAOfetch {
 
     constructor() {
@@ -20,8 +21,8 @@ class ClientesDAOfetch {
                     method: 'POST',
                     body: JSON.stringify(cliente),
                     headers: {
-                        'Content-type': 'application/JSON',
-                        'accept': 'application/JSON' 
+                        'Content-type': 'application/json',
+                        'accept': 'application/json' 
                     }
                 })
                 .then (response => this.comprobarRespuesta(response) )
@@ -32,8 +33,8 @@ class ClientesDAOfetch {
                     method: 'PUT',
                     body: JSON.stringify(cliente),
                     headers: {
-                        'Content-type': 'application/JSON',
-                        'accept': 'application/JSON' 
+                        'Content-type': 'application/json',
+                        'accept': 'application/json' 
                     }
                 })
                 .then (response => this.comprobarRespuesta(response) )
@@ -49,7 +50,6 @@ class ClientesDAOfetch {
     
     /** Saves response status and returns object data*/
     comprobarRespuesta(response) {
-       
         this.respuestaValida=response.ok;
         //TODO check network errors
         return response.json();

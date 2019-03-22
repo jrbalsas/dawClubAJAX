@@ -175,8 +175,8 @@ class ClienteCtrl {
         //Show BeanValidation errors from server-side
         console.log(this.model.errMsgs);
         let errorRows = "";
-        this.model.errMsgs.forEach( (m) => {
-            errorRows += "<li class='text-danger'>" + m.error + "</li>";
+        this.model.errMsgs.forEach( m => {
+            errorRows += "<li class='text-danger'>" + m.message + "</li>";
         });
         $(this.config.errMsgs).html(errorRows);
 

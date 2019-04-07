@@ -9,6 +9,7 @@ Sample Maven Netbeans project with classic CRUD Web App using AJAX/JAX-RS
 - Javascript ES6 DAO implementations using JQuery and Fetch API
 - Simple HTML view with CRUD operations using jQuery for client-side validation 
 - API REST with bean-validation error generation
+- Sample JAX-RS CORS filter
 - CSS Style with Bootstrap Framework
 
 ## Usage:

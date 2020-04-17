@@ -13,6 +13,6 @@ Sample Maven Netbeans project with classic CRUD Web App using AJAX/JAX-RS
 - CSS Style with Bootstrap Framework
 
 ## Usage:
-- In JAX-RS webservice, JDBC DAO implementation can be selected for accessing to a derby relational DB
+- In JAX-RS webservice, JPA DAO implementation can be selected for accessing to a h2 relational DB
 - In Javscript Controller, ES6 fetch or jQuery DAO implementation can be selected
-- Launch in a JEE compliant application server, e.g. Payara/Glassfish
+- Launch in a JEE8 compliant application server, e.g. Payara/Glassfish

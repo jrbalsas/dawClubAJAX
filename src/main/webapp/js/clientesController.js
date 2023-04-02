@@ -3,9 +3,11 @@
 
 $( () => { //Bootstrapting MVC
  
+    const apiUrl="http://localhost:8080/club/webservice/clientes";
+
     //Select DAO implementation
-    //let clientesDAO= new ClientesDAOJquery();
-    let clientesDAO= new ClientesDAOfetch();
+    //let clientesDAO= new ClientesDAOJquery( apiUrl );
+    let clientesDAO= new ClientesDAOfetch( apiUrl );
 
     let viewModel = { 
         clientes: [],   //Client list
@@ -34,7 +36,6 @@ class ClienteCtrl {
             btDel:   '#btBorra',
             btCancel:'#btCancela',
             errMsgs: '#errMsgs',          //place for Server-side errors
-            srvUrl:  'webservice/clientes'
         };
     }
     

@@ -1,8 +1,8 @@
 //Sample AJAX DAO implementation with fetch ajax calls
 class ClientesDAOfetch {
 
-    constructor() {
-        this.srvUrl = 'webservice/clientes';
+    constructor( apiUrl ) {
+        this.srvUrl = apiUrl;
         this.respuestaValida=false; //status of last ajax request
     }
     buscaTodos() {

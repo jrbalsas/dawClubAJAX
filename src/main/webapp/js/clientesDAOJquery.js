@@ -1,8 +1,8 @@
 //Sample AJAX DAO implementation with jQuery ajax calls
 class ClientesDAOJquery {
 
-    constructor() {
-        this.srvUrl = 'webservice/clientes';
+    constructor( apiUrl ) {
+        this.srvUrl = apiUrl;
     }
     buscaTodos() {
         return $.getJSON(this.srvUrl)

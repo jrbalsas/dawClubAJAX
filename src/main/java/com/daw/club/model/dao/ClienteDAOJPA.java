@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.context.RequestScoped;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 
 /**
  *
@@ -50,7 +50,7 @@ public class ClienteDAOJPA implements ClienteDAO, Serializable {
         List<Cliente> lc = null;
         try {
             Query q = em.createQuery("Select c from Cliente c", Cliente.class);
-            lc = q.getResultList();
+            lc = (List<Cliente>)q.getResultList();
         } catch (Exception ex) {
             logger.log(Level.SEVERE, ex.getMessage(), ex);
         }
@@ -114,7 +114,7 @@ public class ClienteDAOJPA implements ClienteDAO, Serializable {
     public boolean borra(Integer id) {
         boolean borrado = false;
         try {
-            Cliente c = null;
+            Cliente c;
             c = em.find(Cliente.class, id);
             em.remove(c);
             borrado = true;

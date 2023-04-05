@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -56,7 +57,7 @@ public class ClientesRESTService {
         if( c!=null) {
             response= Response.ok(c).build();
         } else {
-            //Error messages
+            //Error messages (using Map for create generic json objects)
             List<Map<String,Object>> errores=new ArrayList<>();
             Map<String,Object> err=new HashMap<>(); 
             err.put("message", "El cliente no existe");
@@ -75,7 +76,7 @@ public class ClientesRESTService {
         if (clienteDAO.borra(id)==true) {
             response= Response.ok(id).build();
         } else {
-            //Error messages
+            //Error messages (using Map for create generic json objects)
             List<Map<String,Object>> errores=new ArrayList<>();
             Map<String,Object> err=new HashMap<>(); 
             err.put("message", "El cliente no existe");
@@ -95,8 +96,8 @@ public class ClientesRESTService {
             Integer newId=c.getId();
             response= Response.ok(c).build();
         } else {
-            //Error messages
-            List<Map<String,Object>> errores=new ArrayList<>();
+            //Error messages (using Map for create generic json objects)
+            List< Map<String,Object> > errores=new ArrayList<>();
             Map<String,Object> err=new HashMap<>(); 
             err.put("message", "No se ha podido crear el cliente");
             err.put("cliente", c);
@@ -116,7 +117,7 @@ public class ClientesRESTService {
         if (clienteDAO.guarda(c)) {
             response= Response.ok(c).build();
         } else {
-            //Error messages
+            //Error messages (using Map for create generic json objects)
             List<Map<String,Object>> errores=new ArrayList<>();
             Map<String,Object> err=new HashMap<>(); //Error messages
             err.put("message", "No se ha podido modificar el cliente");

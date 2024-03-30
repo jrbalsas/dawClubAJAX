@@ -3,7 +3,8 @@
 
 $( () => { //Bootstrapting MVC
  
-    const apiUrl="http://localhost:8080/club/webservice/clientes";
+    const apiUrl="http://localhost:8080/club/api/clientes";
+    //const apiUrl="http://localhost:8080/api/clientes"; //payara-micro url
 
     //Select DAO implementation
     //let clientesDAO= new ClientesDAOJquery( apiUrl );

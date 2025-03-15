@@ -201,15 +201,16 @@ class ClienteCtrl {
         //Fill table with clientes information
         let clientesRows = "";
         this.model.clientes.forEach( c => {
-            //Place cliente id in user-defined row attribute for easy access 
-            //(see table click event)
-            clientesRows += "<tr data-cliente-id='"+c.id+"'>";
-            clientesRows += "<td>" + c.id + "</td>";
-            clientesRows += "<td>" + c.nombre + "</td>";
-            clientesRows += "<td>" + c.dni + "</td>";
-            clientesRows += "<td>" + (c.socio===true?"Sí":"No") + "</td>";
-            clientesRows += "</tr>";            
+            clientesRows += `
+                <tr data-cliente-id='${c.id}'>
+                    <td>${c.id}</td>
+                    <td>${c.nombre}</td>
+                    <td>${c.dni}</td>
+                    <td>${c.socio ? "Sí" : "No"}</td>
+                </tr>
+            `;
+
         });
         $(this.config.wrapper).html(clientesRows);
     }   
-}; //End clienteCtrl
+} //End clienteCtrl

@@ -31,8 +31,8 @@ import jakarta.ws.rs.core.Response;
  */
 @Path("clientes")
 @Produces(MediaType.APPLICATION_JSON)
-
-@RequestScoped 
+@RequestScoped
+//@RolesAllowed({"USUARIOS","ADMINISTRADORES"}) //By default, only authenticated users can access Endpoints
 public class ClientesRESTService {
 
     @Context
@@ -70,6 +70,7 @@ public class ClientesRESTService {
 
     @DELETE
     @Path("/{id}")
+    //@RolesAllowed("ADMINISTRADORES") //Only admins can delete users
     public Response borraCliente(@PathParam("id") int id) {
         Response response;
         

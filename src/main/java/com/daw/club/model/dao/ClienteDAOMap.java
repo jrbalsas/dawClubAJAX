@@ -18,10 +18,6 @@ public class ClienteDAOMap implements ClienteDAO, Serializable{
 
     public ClienteDAOMap() {
         clientes = new HashMap<>();
-
-        clientes.put(idCliente, new Cliente(idCliente++, "Paco López", "11111111A", false));
-        clientes.put(idCliente, new Cliente(idCliente++, "María Jiménez", "22222222B", true));
-        clientes.put(idCliente, new Cliente(idCliente++, "Carlos García", "33333333C", true));
     }
     
     @Override

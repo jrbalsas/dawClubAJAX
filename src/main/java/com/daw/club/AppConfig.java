@@ -11,8 +11,8 @@ import jakarta.inject.Inject;
 import jakarta.security.enterprise.authentication.mechanism.http.BasicAuthenticationMechanismDefinition;
 import jakarta.security.enterprise.authentication.mechanism.http.FormAuthenticationMechanismDefinition;
 import jakarta.security.enterprise.authentication.mechanism.http.LoginToContinue;
-import org.glassfish.soteria.identitystores.annotation.Credentials;
-import org.glassfish.soteria.identitystores.annotation.EmbeddedIdentityStoreDefinition;
+import jakarta.security.enterprise.identitystore.InMemoryIdentityStoreDefinition;
+import jakarta.security.enterprise.identitystore.InMemoryIdentityStoreDefinition.Credentials;
 
 import java.util.logging.Logger;
 
@@ -24,7 +24,7 @@ import java.util.logging.Logger;
     SELECT some IdentityStore implementations
 */
 /* Soteria RI in memory IdentityStore (org.glassfish.soteria dependency needed in pom.xml */
-@EmbeddedIdentityStoreDefinition({
+@InMemoryIdentityStoreDefinition({
         @Credentials(callerName = "admin", password = "secret1", groups = {"ADMINISTRADORES"}),
         @Credentials(callerName = "user", password = "secret2", groups = {"USUARIOS"})
 })
